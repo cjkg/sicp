@@ -243,3 +243,243 @@ Example:
                   kinds-of-coins)))))
   (cc amount 5))
 
+;; Exercise 1.11
+
+(define (f-r n)
+  (if (< n 3)
+      n
+      (+ (f-r (- n 1))
+         (* 2 (f-r (- n 2)))
+         (* 3 (f-r (- n 3))))))
+
+#|
+(f 1)
+1
+
+(f 2)
+2
+
+(f 3)
+(+ (f 2) (* 2 (f 1)) (* 3 (f 0)))
+(+ 2 (* 2 1) (* 3 0))
+(+ 2 2 0)
+4
+
+(f 4)
+(+ (f (- 4 1)) (* 2 (f (- 4 2))) (* 3 (f (- 4 3))))
+(+ (f 3) (* 2 (f 2)) (* 3 (f 1)))
+(+ (f 3) (* 2 2) (* 3 1))
+(+ (f 3) 4 3)
+(+ (+ (f 2) (* 2 (f 1)) (* 3 (f 0))) 4 3)
+(+ (+ 2 (* 2 1) (* 3 0)) 4 3)
+(+ (+ 2 2 0) 4 3))
+(+ 4 4 3)
+11
+
+(f 5)
+(+ (f 4) (* 2 (f 3)) (* 3 (f 2)))
+(+ 11 (* 2 4) (* 3 2))
+25
+|#
+        
+;;;;;;;;;;;;;;;;
+
+
+;; Exercise 1.12
+
+(define (pascal column row)
+  (if (or (= 0 column) (= row column))
+      1
+      (+ (pascal
+          (- column 1) (- row 1))
+         (pascal
+          column (- row 1)))))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.13
+
+;; skipped
+
+;;;;;;;;;;;;;;;;
+
+
+
+;; Exercise 1.14
+
+;; skipped
+
+;;;;;;;;;;;;;;;;
+
+
+
+;; Exercise 1.15
+
+(define (sine angle)
+  (define (p x) (- (* 3 x) (* 4 (cube x))))
+  (if (not (> (abs angle) 0.1))
+      angle
+      (p (sine (/ angle 3.0)))))
+
+;; skipped
+
+;;;;;;;;;;;;;;;;
+
+
+(define (expt-r-naive b n)
+  (if (= n 0)
+      1
+      (* b (expt-r-naive b (- n 1)))))
+
+#|
+(expt 2 3)
+(* 2 (expt 2 (- 3 1)))
+(* 2 (expt 2 2))
+(* 2 (* 2 (expt 2 (- 2 1)))
+(* 2 (* 2 (expt 2 1))
+(* 2 (* 2 (* 2 (expt 2 (- 1 1)))))
+(* 2 (* 2 (* 2 (expt 2 0))))
+(* 2 (* 2 (* 2 1)))
+(* 2 (* 2 2))
+(* 2 4)
+8
+|#
+
+
+
+
+
+(define (expt-i-naive b counter product)
+  (if (= counter 0)
+      product
+      (expt-i-naive b
+                 (- counter 1)
+                 (* b product))))
+
+#|
+(expt 2 3 1)
+(expt 2 (- 3 1) (* 2 1))
+(expt 2 2 2)
+(expt 2 (- 2 1) (* 2 2))
+(expt 2 1 4)
+(expt 2 (- 1 1) (* 2 4))
+(expt 2 0 8)
+8
+|#
+
+
+(define (fast-expt-r b n)
+  (cond ((= n 0) 
+         1)
+        ((even? n) 
+         (square (fast-expt-r b (/ n 2))))
+        (else 
+         (* b (fast-expt-r b (- n 1))))))
+
+#|
+(fast-expt 2 3)
+(* 2 (fast-expt 2 (- 3 1)))
+(* 2 (fast-expt 2 2))
+(* 2 (square (fast-expt (2 (/ 2 2)))))
+(* 2 (square (fast-expt (2 1))
+(* 2 (square (* 2 (fast-expt (2 0)))))
+(* 2 (square (* 2 1)))
+(* 2 (square 2))
+(* 2 (* 2 2))
+(* 2 4)
+8
+|#
+
+
+;; Exercise 1.16
+
+#|
+(define (fast-expt b n)
+  (define (fast-expt-iter b c a n)
+    (cond ((= c n)
+           a)
+          ((even? n)
+           (fast-expt-iter 
+          
+|#
+;;;;;;;;;;;;;;;;
+
+
+;; Excercise 1.17
+
+(define (mult-add a b)
+  (if (= b 0)
+      0
+      (+ a (mult-add a (- b 1)))))
+
+(define (double n) (* n 2))
+
+(define (halve n) (/ n 2))
+
+(define (fast-mult a b)
+  (cond ((= b 0) 0)
+         ((even? a)
+          (double (fast-mult b (halve a))))
+         (else (+ a (fast-mult a (- b 1))))))
+
+#|
+(fast-mult 3 3)
+(+ 3 (fast-mult 3 (fast-mult 3 2)))
+(+ 3 (+ 3 (fast-mult 3 1)))
+(+ 3 (+ 3 (+ 3 (fast-mult 3 0))))
+(+ 3 (+ 3 (+ 3 0)))
+(+ 3 (+ 3 3))
+(+ 3 6)
+9
+
+(fast-mult 4 3)
+(double (fast-mult 3 (halve 4)))
+(double (fast-mult 3 2))
+(double (+ 3 (fast-mult 3 (- 2 1))))
+(double (+ 3 (fast-mult 3 1)))
+(double (+ 3 (+ 3 (fast-mult 3 0))))
+(double (+ 3 (+ 3 0))))
+(double (+ 3 3))
+(double 6)
+12
+
+(mult-add 4 3)
+(+ 4 (mult-add 4 2))
+(+ 4 (+ 4 (mult-add 4 1)))
+(+ 4 (+ 4 (+ 4 (mult-add 4 0))))
+(+ 4 (+ 4 (+ 4 0)))
+(+ 4 (+ 4 4))
+(+ 4 8)
+12
+
+(fast-mult 4 8)
+(double (fast-mult 8 (halve 4)))
+(double (fast-mult 8 2))
+(double (double (fast-mult 8 1)))
+(double (double (+ 8 (fast-mult 0))))
+(double (double (+ 8 0)))
+(double (double 8))
+(double 16)
+32
+
+(mult-add 4 8)
+(+ 4 (mult-add 4 7))
+(+ 4 (+ 4 (mult-add 4 6)))
+(+ 4 (+ 4 (+ 4 (mult-add 4 5))))
+(+ 4 (+ 4 (+ 4 (+ 4 (mult-add 4 4)))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (mult-add 4 3))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (mult-add 4 2)))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (mult-add 4 1))))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (mult-add 4 0)))))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 0)))))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+4 4))))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 (+ 4 8))))))
+(+ 4 (+ 4 (+ 4 (+ 4 (+ 4 12)))))
+(+ 4 (+ 4 (+ 4 (+ 4 16))))
+(+ 4 (+ 4 (+ 4 20)))
+(+ 4 (+ 4 24))
+(+ 4 28)
+32
+
+|#
+;;;;;;;;;;;;;;;;;
