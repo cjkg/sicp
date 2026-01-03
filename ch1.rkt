@@ -393,19 +393,26 @@ Example:
 
 ;; Exercise 1.16
 
+(define (fast-expt-i b n)
+  (define (fast-expt-iter b n a)
+    (cond ((= n 0) a)
+          ((even? n) (fast-expt-iter (square b) (/ n 2) a))
+          (else (fast-expt-iter b (- n 1) (* a b)))))
+  (fast-expt-iter b n 1))
+
+
 #|
-(define (fast-expt b n)
-  (define (fast-expt-iter b c a n)
-    (cond ((= c n)
-           a)
-          ((even? n)
-           (fast-expt-iter 
-          
+(expt 2 4 1)
+(expt (square 2) 2 1)
+(expt 4 2 1)
+(expt 16 1 1)
+(expt 16 0 16)
+16
 |#
 ;;;;;;;;;;;;;;;;
 
 
-;; Excercise 1.17
+;; Exercise 1.17
 
 (define (mult-add a b)
   (if (= b 0)
@@ -482,4 +489,34 @@ Example:
 32
 
 |#
-;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.18
+
+(define (fast-mult-i x y)
+  (define (fast-mult-iter x y a)
+    (cond ((= y 0) a)
+          ((even? y) (fast-mult-iter (double x) (halve y) a))
+          (else (fast-mult-iter x (- y 1) (+ a x)))))
+  (fast-mult-iter x y 0))
+
+#|
+
+(fast-mult-i 3 4)
+(fast-mult-iter 3 4 0)
+(fast-mult-iter (double 3) (halve 4) 0)
+(fast-mult-iter 6 2 0)
+(fast-mult-iter (double 6) (halve 2) 0)
+(fast-mult-iter 12 1 0)
+(fast-mult-iter 12 0 12)
+12
+
+|#
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.19
+
+; skipped
+
+;;;;;;;;;;;;;;;;
