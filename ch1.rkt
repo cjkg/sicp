@@ -520,3 +520,153 @@ Example:
 ; skipped
 
 ;;;;;;;;;;;;;;;;
+
+
+(define (gcd-mine a b)
+  (cond ((> b a) (gcd-mine b a))
+        ((= b 0) a)
+        (else (gcd-mine b (remainder a b)))))
+
+
+;; Exercise 1.20
+
+#|
+applicative order
+-----------------
+(gcd 206 40)
+(gcd 40 (remainder 206 40))
+(gcd 40 6)
+(gcd 6 (remainder 40 6))
+(gcd 6 4)
+(gcd 4 (remainder 6 4))
+(gcd 4 2)
+(gcd 2 (remainder 4 2))
+(gcd 2 0)
+2
+
+normal order
+------------
+skipped
+
+|#
+;;;;;;;;;;;;;;;;
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next x)
+  (if (< x 3)
+      (+ x 1)
+      (+ x 2)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder
+          (square (expmod base (halve exp) m))
+          m))
+        (else
+         (remainder
+          (* base (expmod base (- exp 1) m)) m))))
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+
+(define (fast-prime? n times)
+  (cond ((= times 0) true)
+        ((fermat-test n)
+         (fast-prime? n (- times 1)))
+        (else false)))
+
+
+;; Exercise 1.21
+
+; (smallest-divisor 199) -> 199
+; (smallest-divisor 1999) -> 1999
+; (smallest-divisor 19999) -> 7
+
+;;;;;;;;;;;;;;;;;
+
+;; Exercise 1.22
+
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime)
+                       start-time))))
+
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+(define (search-for-primes m n)
+  (cond ((> m n) (display "\nDone "))
+      (else
+            (timed-prime-test m)
+            (search-for-primes (+ m 1) n))))
+
+; (search-for-primes 1000 2000) => 1009, 1013, 1019
+; (search-for-primes 10000 11000) => 10007, 10009, 10037
+; (search-for-primes 100000 101000) => 100003, 100019, 100043
+; (search-for-primes 1000000 1001000) => 1000003, 1000033, 1000037
+
+; Θ(sqrt(n)) is roughly accurate 
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.23
+
+; Updated functions above. As others have noted the overhead of calling
+; next seems to actually slow down the functions called in search-for-primes
+
+;;;;;;;;;;;;;;;;
+
+
+
+;; Exercise 1.24
+
+; I'd expect the millions range to take just slightly longer to compute
+; than the thousands, and that was the case, just a millisecond more in
+; most cases.
+
+;;;;;;;;;;;;;;;;
+
+
+
+;; Exercise 1.25
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+
+;; Exercise 1.26
+
+; (square n) evaluates n once and substitutes n for the second term in
+; the (* n n) call of square. Louis's evaluates n twice needlessly. This
+; decreases the speed of the function.
+
+;;;;;;;;;;;;;;;;
+
