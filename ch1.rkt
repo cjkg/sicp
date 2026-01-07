@@ -670,3 +670,414 @@ skipped
 
 ;;;;;;;;;;;;;;;;
 
+(define (sum-integers a b)
+  (if (> a b)
+      0
+      (+ a (sum-integers (+ a 1) b))))
+
+#|
+(sum-integers 1 3)
+(+ 1 (sum-integers 2 3))
+(+ 1 (+ 2 (sum-integers 3 3)))
+(+ 1 (+ 2 (+ 3 (sum-integers 4 3))))
+(+ 1 (+ 2 (+ 3 0)))
+(+ 1 (+ 2 3))
+(+ 1 5)
+6
+|#
+
+(define (sum-integers-i a b)
+  (define (iter a b c)
+    (if (> a b)
+        c
+        (iter (+ 1 a) b (+ c a))))
+    (iter a b 0))
+
+#|
+(iter 1 3 0)
+(iter (+ 1 1) 3 (+ 0 1))
+(iter 2 3 1)
+(iter (+ 1 2) 3 (+ 1 2))
+(iter 3 3 3)
+(iter (+ 1 3) 3 (+ 3 3))
+(iter 4 3 6)
+6
+|#
+
+(define (sum-cubes a b)
+  (if (> a b)
+      0
+      (+ (cube a)
+         (sum-cubes (+ a 1) b))))
+
+#|
+(sum-cubes 1 3)
+(+ (cube 1) (sum-cubes (+ 1 1) 3))
+(+ 1 (sum-cubes 2 3))
+(+ 1 (+ (cube 2) (sum-cubes (+ 2 1) 3)))
+(+ 1 (+ 8 (sum-cubes 3 3)))
+(+ 1 (+ 8 (+ (cube 3) (sum-cubes 4 3))))
+(+ 1 (+ 8 (+ 27 0)))
+(+ 1 (+ 8 27))
+(+ 1 35)
+36
+|#
+
+(define (sum-cubes-i a b)
+  (define (iter a b c)
+    (if (> a b)
+        c
+        (iter (+ a 1) b (+ c (cube a)))))
+  (iter a b 0))
+
+#|
+(sum-cubes-i 1 3)
+(iter 1 3 0)
+(iter (+ 1 1) 3 (+ 0 (cube 1)))
+(iter 2 3 1)
+(iter (+ 2 1) 3 (+ 1 8))
+(iter 3 3 9)
+(iter (+ 3 1) 3 (+ 9 (cube 3)))
+(iter 4 3 36)
+36
+|#
+
+(define (pi-sum a b)
+  (if (> a b)
+      0
+      (+ (/ 1.0 (* a (+ a 2))) 
+         (pi-sum (+ a 4) b))))
+#|
+(define (<name> a b)
+  (if (> a b)
+      0
+      (+ (<term> a)
+         (<name> (<next> a) b))))
+|#
+
+#|
+(define (<name> a b)
+  (iter (iter a b c)
+        (if (> a b)
+            c
+            (iter (<next> a) b (+ c (<term> a))
+|#
+
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+
+(define (sum-cubes-2 a b)
+  (sum cube a inc b))
+
+#|
+(sum-cubes-2 1 3)
+(sum cube 1 inc 3)
+(+ (cube 1) (sum cube (inc 1) inc 3)
+(+ 1 (sum cube 2 inc 3))
+(+ 1 (+ (cube 2) (sum cube (inc 2) inc 3)))
+(+ 1 (+ 8 (sum cube 3 inc 3)))
+(+ 1 (+ 8 (+ (cube 3) (sum cube (inc 3) inc 3))))
+(+ 1 (+ 8 (+ 27 (sum cube 4 inc 3))))
+(+ 1 (+ 8 (+ 27 0)))
+(+ 1 (+ 8 27))
+(+ 1 35)
+36
+|#
+
+(define (identity x) x)
+
+(define (sum-integers-2 a b)
+  (sum identity a inc b))
+
+#|
+(sum-integers-2 1 3)
+(sum identity 1 inc 3)
+(+ (identity 1) (sum identity (inc 1) inc 3))
+(+ 1 (sum identity 2 inc 3))
+(+ 1 (+ (identity 2) (sum identity (inc 2) inc 3)))
+(+ 1 (+ 2 (sum identity 3 inc 3)))
+(+ 1 (+ 2 (+ (identity 3) (sum identity (inc 3) inc 3))))
+(+ 1 (+ 2 (+ 3 (sum identity 4 inc 3))))
+(+ 1 (+ 2 (+ 3 0)))
+(+ 1 (+ 2 3))
+(+ 1 5)
+6
+|#
+
+(define (pi-sum-2 a b)
+  (define (pi-term x)
+    (/ 1.0 (* x (+ x 2))))
+  (define (pi-next x)
+    (+ x 4))
+  (sum pi-term a pi-next b))
+
+(define (integral f a b dx)
+  (define (add-dx x) (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b) dx))
+
+;; Exercise 1.29
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.30
+
+(define (sum-i term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ result (term a)))))
+  (iter a 0))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.31
+
+; some ideas...
+
+(define (product-cubes a b)
+  (if (> a b)
+      1
+      (* (cube a) (product-cubes (+ a 1) b))))
+
+(define (product-cubes-i a b)
+  (define (iter a c)
+    (if (> a b)
+        c
+        (iter (+ a 1) (* (cube a) c))))
+  (iter 1 1)
+  )
+
+; part 1 (recursive)
+
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a) (product term (next a) next b))))
+
+(define (product-cubes-new a b)
+  (product cube a inc b))
+
+(define (product-factorial n)
+  (product identity 1 inc n))
+
+; skipped the pi approx part
+
+; part 2 (iterative)
+
+(define (product-i term a next b)
+  (define (iter a c)
+    (if (> a b)
+        c
+        (iter (inc a) (* c (term a)))))
+  (iter a 1))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.32
+
+; Part 1 - recursive
+
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+      null-value
+      (combiner (term a)
+                (accumulate combiner null-value term (next a) next b))))
+
+(define (product-factorial-accumulate n)
+  (accumulate * 1 identity 1 inc n))
+
+(define (sum-cubes-accumulate a b)
+  (accumulate + 0 cube a inc b))
+
+(define (sum-accumulate term a next b)
+  (accumulate + 0 term a next b))
+
+(define (product-accumulate term a next b)
+  (accumulate * 1 term a next b))
+
+; Part 2 - iterative
+
+(define (accumulate-i combiner null-value term a next b)
+  (define (iter a c)
+    (if (> a b)
+        c
+        (iter (next a) (combiner (term a) c))))
+  (iter a null-value))
+
+(define (product-factorial-accumulate-i n)
+  (accumulate-i * 1 identity 1 inc n))
+
+(define (sum-cubes-accumulate-i a b)
+  (accumulate-i + 0 cube a inc b))
+
+(define (sum-accumulate-i term a next b)
+  (accumulate-i + 0 term a next b))
+
+(define (product-accumulate-i term a next b)
+  (accumulate-i * 1 term a next b))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.33
+
+(define (filtered-accumulate combiner null-value term a next b filter)
+  (if (> a b)
+      null-value
+      (combiner (if (filter a)
+                    (term a)
+                    null-value)
+                (filtered-accumulate combiner
+                                     null-value
+                                     term
+                                     (next a)
+                                     next
+                                     b
+                                     filter))))
+
+; express the sum of the squares of the prime numbers
+; in the interval a to b:
+
+(define (sum-of-squared-primes a b)
+  (filtered-accumulate + 0 square a inc b prime?))
+
+; express the product of all the positive integers less
+; than n that are relatively prime to n (i.e., all positive
+; integers i < n such that GCD ( i , n ) = 1 ):
+
+(define (product-relative-primes n)
+  (define (is-relative-prime-to? m)
+    (= (gcd m n) 1))
+  (filtered-accumulate * 1 identity 1 inc (- n 1) is-relative-prime-to?))
+
+;;;;;;;;;;;;;;;;
+
+(define (pi-sum-lambda a b)
+  (sum (lambda (x) (/ 1.0 (* x (+ x 2))))
+       a
+       (lambda(x) (+ x 4))
+       b))
+
+(define (integral-lambda f a b dx)
+  (* (sum f
+          (+ a (/ dx 2.0))
+          (lambda (x) (+ x dx))
+          b)
+     dx))
+
+; named
+(define (f-1 x y)
+  (define (f-helper a b)
+    (+ (* x (square a))
+       (* y b)
+       (* a b)))
+  (f-helper (+ 1 (* x y))
+            (- 1 y)))
+
+; transitional
+(define (f-2 x y)
+  ((lambda (a b)
+     (+ (* x (square a))
+        (* y b)
+        (* a b)))
+   (+ 1 (* x y))
+   (- 1 y)))
+
+; let
+(define (f-3 x y)
+  (let ((a (+ 1 (* x y)))
+        (b (- 1 y)))
+    (+ (* x (square a))
+       (* y b)
+       (* a b))))
+
+;; Exercise 1.34
+
+; (define (f g) (g 2))
+; (f square) => 4
+; (f (lambda (z) (* z (+ z 1)))) => 6
+;
+; (f f) fails because 2 is not a procedure
+
+;;;;;;;;;;;;;;;;
+
+
+
+  
+; half-interval method
+#|
+
+simple but powerful method for finding roots of an equation
+f(x) = 0, where f is a continuous function.
+
+If we are given points a and b such that f(a) < 0 f(b), then f
+must have at least one zero betweeen a and b.
+
+To locate a zero, let x be the average of a and b, and compute
+f(x).
+
+If f(x) > 0, then f must have a zero between a and x.
+If f(x) < 0, then f must have a zero between x and b.
+
+Continuing in this way, we can identify smaller and smaller
+intervals on which f must have a zero.
+
+When we reach a point where the interval is small enough, the
+process stops.
+
+|#
+
+(define (search f neg-point pos-point)
+  (define (close-enough? x y)
+    (< (abs (- x y)) 0.001))
+  (let ((midpoint
+         (average neg-point pos-point)))
+    (if (close-enough? neg-point pos-point)
+        midpoint
+        (let ((test-value (f midpoint)))
+          (cond
+            ((positive? test-value)
+             (search f neg-point midpoint))
+            ((negative? test-value)
+             (search f midpoint pos-point))
+            (else midpoint))))))
+
+(define (half-interval-method f a b)
+  (let ((a-value (f a))
+        (b-value (f b)))
+    (cond ((and (negative? a-value)
+                (positive? b-value))
+           (search f a b))
+          ((and (negative? b-value)
+                (positive? a-value))
+           (search f b a))
+          (else
+           (error "Values are not of opposite sign" a b)))))
+
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2))
+       tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+; bad fixed-point sqrt (doesn't converge)
+
+; (define (sqrt x)
+;   (fixed-point (lambda (y) (/ x y))
+;                1.0))
+
+(define (sqrt-fixed-point x)
+  (fixed-point
+   (lambda (y) (average y (/ x y)))
+   1.0))
