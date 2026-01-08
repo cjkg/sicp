@@ -1081,3 +1081,55 @@ process stops.
   (fixed-point
    (lambda (y) (average y (/ x y)))
    1.0))
+
+;; Exercise 1.35
+
+; largely skipped
+
+(define (golden-ratio)
+  (fixed-point-display
+   (lambda (x) (+ 1 (/ 1 x)))
+   1.0))
+
+;; Exercise 1.36
+
+(define (fixed-point-display f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2))
+       tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (newline)
+      (display next)
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+(define (fp x) (/ (log 1000) (log x)))
+
+; (fixed-point-display fp 5) => 28 approximations
+
+(define (fp-damped x) (average x (fp x)))
+
+; (fixed-point-display fp-damped 5) => 8 appromixations
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.37
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.38
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 1.39
+
+; skipped
+
+;;;;;;;;;;;;;;;;js
