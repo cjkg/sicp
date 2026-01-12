@@ -204,3 +204,158 @@
 ; skipped addition for now
 
 ;;;;;;;;;;;;;;;
+
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x)
+                    (lower-bound y))
+                 (+ (upper-bound x)
+                    (upper-bound y))))
+
+(define (mul-interval x y)
+  (let ((p1 (* (lower-bound x)
+               (lower-bound y)))
+        (p2 (* (lower-bound x)
+               (upper-bound y)))
+        (p3 (* (upper-bound x)
+               (lower-bound y)))
+        (p4 (* (upper-bound x)
+               (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4)
+                   (max p1 p2 p3 p4))))
+
+(define (div-interval x y)
+  (if (<= (lower-bound y) 0 (upper-bound y))
+      (error "can't divide by an interval that spans 0") ;Ex. 2.10
+      (mul-interval x
+                    (make-interval
+                     (/ 1.0 (upper-bound y))
+                     (/ 1.0 (lower-bound y))))))
+
+;; Exercise 2.7
+
+(define (make-interval a b) (cons a b))
+(define (lower-bound i) (car i))
+(define (upper-bound i) (cdr i))
+
+;;;;;;;;;;;;;;;
+
+;; Exercise 2.8
+
+(define (sub-interval x y)
+  (make-interval (- (lower-bound x)
+                    (lower-bound y))
+                 (- (upper-bound x)
+                    (upper-bound y))))
+
+;;;;;;;;;;;;;;;
+
+;; Exercise 2.9
+    
+; skipped
+
+;;;;;;;;;;;;;;;
+
+;; Exercise 2.10
+
+; See division function above
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.11
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+(define (make-center-width c w)
+   (make-interval (- c w) (+ c w)))
+
+(define (center i)
+  (/ (+ (lower-bound i)
+        (upper-bound i))
+     2))
+
+(define (width i)
+  (/ (- (upper-bound i)
+        (lower-bound i))
+     2))
+
+;; Exercise 2.12
+
+(define (make-center-percent c p)
+  (make-interval (- c p)
+                 (+ c p)))
+
+(define (percent i)
+  (/ (- (upper-bound i)
+        (lower-bound i)) (* 2 (center i))))
+
+;;;;;;;;;;;;;;;;
+
+
+;; Exercise 2.13
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.14
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.15
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.16
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.17
+
+(define (last-pair l)
+  (cond ((null? l) l)
+        ((null? (cdr l)) l)
+        (else (last-pair (cdr l)))))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.18
+
+(define (reverse l)
+  (define (iter l l2)
+    (if (null? l)
+        l2
+        (iter (cdr l) (cons (car l) l2))))
+  (iter l '()))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.19
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+
+;; Exercise 2.20
+
+(define a (list 1 2 3 4 5))
+
+(define (same-parity l)
+  (let ((parity (even? (car l))))
+    (define (iter x y)
+      (if (null? x)
+          y
+          (iter (cdr x) (if (eq? parity (even? (car x)))
+                            (cons (car x) y)
+                            y))))
+    (reverse (iter l '())))) ; TODO how to cdr down a list without extra reverse?
+
+;;;;;;;;;;;;;;;;
