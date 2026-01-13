@@ -359,3 +359,53 @@
     (reverse (iter l '())))) ; TODO how to cdr down a list without extra reverse?
 
 ;;;;;;;;;;;;;;;;
+
+(define (scale-list-orig items factor)
+  (if (null? items)
+      nil
+      (cons (* (car items) factor)
+            (scale-list-orig (cdr items) factor))))
+
+#|
+
+(scale-list-orig '(1 2 3) 2)
+(cons (* 1 2) (scale-list-orig (2 3) 2))
+(cons 2 (scale-list-orig (2 3) 2))
+(cons 2 (cons (* 2 2) (scale-list-orig (3) 2)))
+(cons 2 (cons 4 (scale-list-orig (3) 2)))
+(cons 2 (cons 4 (cons (* 3 2) (scale-list-orig '() 2))))
+(cons 2 (cons 4 (cons 6 '()) ; nil returns '()
+(cons 2 (cons 4 '(6)))
+(cons 2 '(4 6))
+'(2 4 6)
+
+|#
+
+(define (scale-list items factor)
+  (map (lambda (x) (* x factor))
+       items))
+
+;; Exercise 2.21
+
+;redefine square from chap 1
+(define (square x) (* x x))
+
+(define (square-list-one items)
+  (if (null? items)
+      nil
+      (cons (square (car items))
+            (square-list-one (cdr items)))))
+
+(define (square-list-two items)
+  (map square items))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.22
+
+; In the first answer, because cons prepends, it is going to go in
+; reverse order. The second answer is an attempt to flip it to an
+; append operation, but this doesn't work either because it appends
+; a list of an integer instead of an integer.
+
+;;;;;;;;;;;;;;;;
