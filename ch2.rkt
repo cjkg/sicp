@@ -409,3 +409,131 @@
 ; a list of an integer instead of an integer.
 
 ;;;;;;;;;;;;;;;;
+
+;; Exercise 2.23
+
+(define (for-each proc xs)
+  (cond ((not (null? xs))
+         (proc (car xs))
+         (for-each proc (cdr xs)))))
+
+;;;;;;;;;;;;;;;;
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+;; Exercise 2.24
+#|
+
+'(1 (2 (3 4)))
+
+      
+      \
+     / \
+    /  /\
+   /  /  |
+  /  /   |
+ /  /   / \
+1  2   3   4
+
+|#
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.25
+
+(define q (list 1 3 (list 5 7) 9))
+(define r (list (list 7)))
+(define s '(1 (2 (3 (4 (5 (6 7)))))) )
+
+; (car (cdr (car (cdr (cdr q)))))
+; (car (car r))
+; (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr s))))))))))))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.26
+
+(define t (list 1 2 3))
+(define u (list 4 5 6))
+
+; (append t u) => (list 1 2 3 4 5 6)
+; (cons t u) => (list (list 1 2 3) 4 5 6))
+; (list t u) => (list (list 1 2 3) (list 4 5 6))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.27
+
+(define v
+  (list (list (list 1 2)) (list 3 4)))
+
+(define (deep-reverse xs)
+  (if (pair? xs)
+      (map deep-reverse (reverse xs))
+      xs))
+
+;;;;;;;;;;;;;;;;
+
+
+
+;; Exercise 2.28
+
+;skipped
+
+;;;;;;;;;;;;;;;;
+
+
+;; Exercise 2.29
+
+;0:
+
+(define (make-mobile left right)
+  (list left right))
+
+(define (make-branch length structure)
+  (list length structure)) ;length must be number, structure may also be a mobile
+
+;1:
+
+(define (left-branch mobile)
+  (car mobile))
+(define (right-branch mobile)
+  (car (cdr mobile)))
+
+(define (branch-length branch)
+  (car branch))
+(define (branch-structure branch)
+  (car (cdr branch)))
+
+;2:
+
+;; THIS DOES NOT WORK -- treats lengths as weights. TODO skipped
+(define (total-weight x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) x)
+        (else (+ (total-weight (left-branch x))
+                 (total-weight (right-branch x))))))
+
+;3: skipped
+
+
+
+;4:
+
+; if we changed the representation of mobiles so that the constructors
+; used cons instead of list, the main change is that the right branch
+; and the structure are now lists, so we have to drop the cars from our
+; selectors:
+
+; (define (right-branch mobile)
+;   (cdr mobile))
+
+; (define (branch-structure branch)
+;   (car (cdr branch)))
+
+;;;;;;;;;;;;;;;;
+
