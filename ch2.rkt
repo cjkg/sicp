@@ -681,3 +681,18 @@
 
 (define (length2 sequence)
   (accumulate (lambda (x y) (inc y)) 0 sequence))
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.34
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.35
+
+(define (count-leaves-a t)
+  (accumulate + 0 (map (lambda (x) 1) (enumerate-tree t))))
+
+;;;;;;;;;;;;;;;;
