@@ -511,7 +511,7 @@
 
 ;2:
 
-;; THIS DOES NOT WORK -- treats lengths as weights. TODO skipped
+;; THIS DOES NOT WORK -- treats lengths as weights. TODO
 (define (total-weight x)
   (cond ((null? x) 0)
         ((not (pair? x)) x)
@@ -705,4 +705,30 @@
       (cons (accumulate op init (map car seqs))
             (accumulate-n op init (map cdr seqs)))))
 
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.37
+
+; skipped
+
+;;;;;;;;;;;;;;;;
+
+;; Exercise 2.38
+
+(define (fold-left op initial sequence)
+  (define (iter result rest)
+    (if (null? rest)
+        result
+        (iter (op result (car rest))
+              (cdr rest))))
+  (iter initial sequence))
+
+; (fold-right / 1 (list 1 2 3)) => 1 1/2
+; (fold-left / 1 (list 1 2 3)) => 1/6
+; (fold-right list nil (list 1 2 3)) => (list (list) (list 1 2 3))
+; (fold-left list nil (list 1 2 3)) => (list ( list (list (list) 1) 2) 3)
+
+; Two properties need to be satisfied: associativity and commutativity. E.g.,
+; addition and multiplication satisfy both, but division and subtraction do not.
+          
 ;;;;;;;;;;;;;;;;
